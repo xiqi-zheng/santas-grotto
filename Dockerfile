@@ -6,7 +6,7 @@ RUN mvn -f /home/app/pom.xml clean package -DskipTests=True
 FROM openjdk:11.0-jdk-slim-buster
 COPY --from=build /home/app/target/santas-grotto-0.0.1-SNAPSHOT.jar /usr/local/lib/demo.jar
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV PG_HOST=kube-toolchain-20211027003304412
+ENV PG_HOST=santas-grotto-postgre-toolchain-202111020943
 ENV POSTGRES_PASSWORD=mysecretpassword
 ENV POSTGRES_USER=santa
 ENV POSTGRES_DB=santa_db
