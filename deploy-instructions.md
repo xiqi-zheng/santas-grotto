@@ -2,16 +2,19 @@
 
 ## 1. Fork GitHub repository
 1. In GitHub, fork this [example repo](https://github.com/jushchuk/santas-grotto).
-2. There are two branches that are important: `springboot` and `postgre`. In each branch, you will have to make small modifications
+2. There are two branches that are important: `springboot` and `postgre`. In the `springboot` branch, you will have to make small modifications which we will cover in a later step.
 
 ## 2. Create Database Toolchain
 
 1. Inside IBM Cloud account, go to [toolchains](https://cloud.ibm.com/devops/toolchains?env_id=ibm:yp:eu-gb)
-2. Make sure Resource Group is your individual group-<x> and Location is London. Click `Create toolchain`
+2. Make sure Resource Group is your individual `group-<x>` and Location is London. Click `Create toolchain`
 3. Select `Develop a Kubernetes App`
-4. In the options, change `Select a source provider` to `GitHub`. `Toochain name` and later `App name` should have your project name as part of them and the phrase `database` or `postgre` etc.. **Remember the `App name` for future step**. Other options can be left as defaults.
-5. Click on `Delivery Pipeline` (clicking create now will bring you to the same tab). Add new IBM Cloud API key by clicking `New +` (note this is a secret credential, DO NOT SHARE). You will see a popup, default values are ok, but it is encouraged to add a description to the API key with something related to your project.
-6. Values should be automatically populated. **IMPORTANT**: you must provide the correct `Cluster namespace`, do not use the default `prod`. Use the namespace that follows this pattern: `group-<lowercaseprojectname>`. Then click `Create`.
+4. In the options, change `Select a source provider` to `GitHub`. Follow instructions to link GitHub account that contains the forked repository.
+5. Change `Clone` to `Existing` and select the right repository from the dropdown list.
+6. Click on `Delivery Pipeline` (clicking create now will bring you to the same tab). Add new IBM Cloud API key by clicking `New +` (note this is a secret credential, DO NOT SHARE). You will see a popup, default values are ok, but it is encouraged to add a description to the API key with something related to your project.
+7. Values should be automatically populated. **IMPORTANT**: you must provide the correct `Cluster namespace`, do not use the default `prod`. Use the namespace that follows this pattern: `group-<lowercaseprojectname>`. 
+8. Update `Toochain name` and `App name` to include your project name as part of them and the phrase `database` or `postgre` etc.. I would recommend you use the same phrase for both for simplicity. **Remember the `Toochain name` for future step**.
+9. Click `Create`.
 
 ## 3. Modifying Database toolchain
 
@@ -40,23 +43,26 @@ At this point, you should click the Play button in the Build tile to restart the
 
 An important step is to connect the database with the app. We can do this by modifying a field in the `Dockerfile` in the `springboot` branch. The line
 ```
-PG_HOST=santas-grotto-postgre-toolchain-202111020943
+ENV PG_HOST=......
 ```
 should be replaced with
 ```
-ENV PG_HOST=<your-database-app-name>
+ENV PG_HOST=<your-database-toolchain-name>
 ```
-where `<your-database-app-name>` is what you remembered from step 2.4.
+where `<your-database-toolchain-name>` is what you remembered from step 2.8. This is the hostname that the app container will use to find the database container.
 
 ## 5. Create Springboot Toolchain
 A toolchain also needs to be created for the application. Many of the steps will be similar, but with some important differences.
 
 1. Inside IBM Cloud account, go to [toolchains](https://cloud.ibm.com/devops/toolchains?env_id=ibm:yp:eu-gb)
-2. Make sure Resource Group is your individual group-<x> and Location is London. Click `Create toolchain`
+2. Make sure Resource Group is your individual `group-<x>` and Location is London. Click `Create toolchain`
 3. Select `Develop a Kubernetes App`
-4. In the options, change `Select a source provider` to `GitHub`. `Toochain name` and later `App name` should have your project name as part of them. Other options can be left as defaults.
-5. Click on `Delivery Pipeline` (clicking create now will bring you to the same tab). Add new IBM Cloud API key by clicking `New +` (note this is a secret credential, DO NOT SHARE). You will see a popup, default values are ok, but it is encouraged to add a description to the API key with something related to your project.
-6. Values should be automatically populated. **IMPORTANT**: you must provide the correct `Cluster namespace`, do not use the default `prod`. Use the namespace that follows this pattern: `group-<lowercaseprojectname>`. Then click `Create`.
+4. In the options, change `Select a source provider` to `GitHub`. Your GitHub account should be linked from prior steps.
+5. Change `Clone` to `Existing` and select the right repository from the dropdown list.
+6. Click on `Delivery Pipeline` (clicking create now will bring you to the same tab). Add new IBM Cloud API key by clicking `New +` (note this is a secret credential, DO NOT SHARE). You will see a popup, default values are ok, but it is encouraged to add a description to the API key with something related to your project.
+7. Values should be automatically populated. **IMPORTANT**: you must provide the correct `Cluster namespace`, do not use the default `prod`. Use the namespace that follows this pattern: `group-<lowercaseprojectname>`. 
+8. Update `Toochain name` and `App name` to include your project name as part of them.
+9. Click `Create`.
 
 ## 6. Modifying Springboot toolchain
 
