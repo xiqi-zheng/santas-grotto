@@ -198,7 +198,7 @@ EOT
   application_name=$(echo ${IDS_PROJECT_NAME:-$IMAGE_NAME} | tr -cd '[:alnum:].-')
   printf "$deployment_content" \
    "${application_name}" "${application_name}" "${application_name}" "${application_name}" "${IMAGE}" "${PORT}" \
-   "${application_name}" "${application_name}" | tee ${DEPLOYMENT_FILE}
+   "${application_name}" "${application_name}" "${application_name}" | tee ${DEPLOYMENT_FILE}
 fi
 
 echo "=========================================================="
