@@ -149,15 +149,39 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: my-cip
+spec:
+  selector:
+    app: %s
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: %s
+  annotations:
+    kubernetes.io/ingress.class: "public-iks-k8s-nginx"
   labels:
     app: %s
 spec:
-  type: LoadBalancer
-  ports:
-    - port: %s
-  selector:
-    app: %s
+  tls:
+  - hosts: 
+    - classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
+    secretName: classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000
+  rules:
+  - host: classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-cip
+            port:
+              number: 8080
 EOT
 )
   # Find the port
@@ -174,7 +198,7 @@ EOT
   application_name=$(echo ${IDS_PROJECT_NAME:-$IMAGE_NAME} | tr -cd '[:alnum:].-')
   printf "$deployment_content" \
    "${application_name}" "${application_name}" "${application_name}" "${application_name}" "${IMAGE}" "${PORT}" \
-   "${application_name}" "${application_name}" "${PORT}" "${application_name}" | tee ${DEPLOYMENT_FILE}
+   "${application_name}" "${application_name}" | tee ${DEPLOYMENT_FILE}
 fi
 
 echo "=========================================================="
