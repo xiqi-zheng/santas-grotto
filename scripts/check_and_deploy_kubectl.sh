@@ -162,6 +162,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: %s
+  namespace: %s
   annotations:
     kubernetes.io/ingress.class: "public-iks-k8s-nginx"
   labels:
@@ -169,10 +170,10 @@ metadata:
 spec:
   tls:
   - hosts: 
-    - classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
+    - %s.classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
     secretName: classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000
   rules:
-  - host: classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
+  - host: %s.classroom-eu-gb-1-bx2-4x1-d4ceb080620f0ec34cd169ad110144ef-0000.eu-gb.containers.appdomain.cloud
     http:
       paths:
       - path: /
@@ -198,7 +199,7 @@ EOT
   application_name=$(echo ${IDS_PROJECT_NAME:-$IMAGE_NAME} | tr -cd '[:alnum:].-')
   printf "$deployment_content" \
    "${application_name}" "${application_name}" "${application_name}" "${application_name}" "${IMAGE}" "${PORT}" \
-   "${application_name}" "${application_name}" "${application_name}" | tee ${DEPLOYMENT_FILE}
+   "${application_name}" "${application_name}" "${CLUSTER_NAMESPACE}" "${application_name}" "${CLUSTER_NAMESPACE}" "${CLUSTER_NAMESPACE}" | tee ${DEPLOYMENT_FILE}
 fi
 
 echo "=========================================================="
