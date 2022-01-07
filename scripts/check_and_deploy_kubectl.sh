@@ -155,8 +155,8 @@ spec:
     app: %s
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: %s
+      targetPort: %s
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -182,7 +182,7 @@ spec:
           service:
             name: my-cip
             port:
-              number: 8080
+              number: %s
 EOT
 )
   # Find the port
@@ -199,7 +199,8 @@ EOT
   application_name=$(echo ${IDS_PROJECT_NAME:-$IMAGE_NAME} | tr -cd '[:alnum:].-')
   printf "$deployment_content" \
    "${application_name}" "${application_name}" "${application_name}" "${application_name}" "${IMAGE}" "${PORT}" \
-   "${application_name}" "${application_name}" "${CLUSTER_NAMESPACE}" "${application_name}" "${CLUSTER_NAMESPACE}" "${CLUSTER_NAMESPACE}" | tee ${DEPLOYMENT_FILE}
+   "${application_name}" "${PORT}" "${PORT}" \
+   "${application_name}" "${CLUSTER_NAMESPACE}" "${application_name}" "${CLUSTER_NAMESPACE}" "${CLUSTER_NAMESPACE}" "${PORT}" | tee ${DEPLOYMENT_FILE}
 fi
 
 echo "=========================================================="
